@@ -17,10 +17,14 @@ const puerto = 3900;
 app.use(cors());
 
 //Convertir body a objeto js
-app.use(express.json());
+app.use(express.json()); // Recibir datos con content-type app/json
+app.use(express.urlencoded({extended:true})); //Recoge datos que llega por form-urlencoded
 
 //Rutas
-// const rutas_articulo = require("./routes/articulo")
+const rutas_articulo = require("./routes/articulo")
+
+//Cargando las rutas
+app.use("/api", rutas_articulo)
 
 //Routas prueba hardcodeadas
 app.get("/probando", (req, res) =>{
