@@ -19,7 +19,10 @@ app.use(cors());
 //Convertir body a objeto js
 app.use(express.json());
 
-//Crear rutas
+//Rutas
+// const rutas_articulo = require("./routes/articulo")
+
+//Routas prueba hardcodeadas
 app.get("/probando", (req, res) =>{
     return res.status(200).send(
         `

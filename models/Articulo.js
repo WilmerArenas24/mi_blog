@@ -19,4 +19,4 @@ const ArticuloSchema = Schema({
     },
 })
 
-module.exports = model("Articulo",ArticuloSchema, "articles") //El ultimo nombre es el nombre de la coleccion
+module.exports = model("Articulo",ArticuloSchema, "articles") //El ultimo nombre es el nombre de la coleccion 
