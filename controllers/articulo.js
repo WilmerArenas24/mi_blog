@@ -72,7 +72,9 @@ const crear = async (req, res) => {
 const listar = async (req, res) => {
   try {
       // Ejecutar la consulta de todos los artículos de forma asíncrona
-      const articulos = await Articulo.find({}).exec();
+      const articulos = await Articulo.find({})
+                                      .sort({fecha:-1}) //Ordenando la lista por el más nuevo en creacion
+                                      .exec();
 
       // Verificar si se encontraron artículos
       if (!articulos || articulos.length === 0) {
@@ -97,6 +99,39 @@ const listar = async (req, res) => {
   }
 }
 
+// Método para obtener un solo artículo de mi blog
+const uno = async (req, res) => {
+  try {
+      // Recoger un id de la URL
+      let id = req.params.id;
+
+      // Buscar un artículo de forma asíncrona
+      const articulo = await Articulo.findById(id);
+
+      // Si no se encuentra el artículo, devolver un error
+      if (!articulo) {
+          return res.status(404).json({
+              status: "error",
+              mensaje: "No se ha encontrado el artículo"
+          });
+      }
+
+      // Devolver el resultado
+      return res.status(200).json({
+          status: "success",
+          articulo
+      });
+  } catch (error) {
+      // Manejar errores en caso de que ocurran durante la búsqueda
+      console.error("Error al obtener el artículo:", error);
+      return res.status(500).json({
+          status: "error",
+          mensaje: "Error al obtener el artículo de la base de datos"
+      });
+  }
+}
+
+
 
 
 
@@ -105,5 +140,6 @@ module.exports = {
     prueba,
     curso,
     crear,
-    listar
+    listar,
+    uno
 }

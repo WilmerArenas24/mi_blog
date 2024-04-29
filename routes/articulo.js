@@ -9,7 +9,8 @@ router.get("/curso", ArticuloControlador.curso);
 
 //Ruta util
 router.post("/crear", ArticuloControlador.crear);
-router.get("/articulos", ArticuloControlador.listar);
+router.get("/articulos/:ultimos?", ArticuloControlador.listar); //Con el signo de interrogación le indicamos que el parametro es opcional
+router.get("/articulo/:id", ArticuloControlador.uno);
 
 
 
