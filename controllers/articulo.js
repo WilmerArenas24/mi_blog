@@ -1,6 +1,8 @@
 //Importando la libreria de validator para hacer las validaciones
 const validator = require("validator");
+const {validarArticulo} = require("../helper/validar");
 const Articulo = require("../models/Articulo");
+
 
 const prueba = (req, res) => {
     return res.status(200).json({
@@ -28,16 +30,10 @@ const crear = async (req, res) => {
     // Recoger los parametros a guardar
     let parametros = req.body;
 
-    console.log(parametros)
-
     //Validar los datos con la libreria "validator"
     try {
-        let validar_titulo = !validator.isEmpty(parametros.titulo);
-        let validar_contenido = !validator.isEmpty(parametros.contenido);
-
-        if (!validar_titulo || !validar_contenido) {
-            throw new Error("Ingrese los datos completos")
-        }
+        validarArticulo(parametros);
+        
 
     } catch (error) {
         return res.status(400).json({
@@ -134,9 +130,9 @@ const uno = async (req, res) => {
 //Eliminar un artciulo por id
 const borrar = async (req,res)=>{
 
-  let articulo_id = req.params.id;
+  let articuloId = req.params.id;
 
-  const articulo = await Articulo.findOneAndDelete({_id: articulo_id});
+  const articulo = await Articulo.findOneAndDelete({_id: articuloId});
 
   // Articulo.findOneAndDelete({_id: articulo_id}, (error, articulo_borrado) =>{
 
@@ -155,13 +151,45 @@ const borrar = async (req,res)=>{
     articulo: articulo,
     mensaje: "Articulo borrando"
 });
-
-  
-  
-
-
-
 }
+
+
+const editar = async (req, res) => {
+    try {
+        // Recoger el ID a editar
+        let articuloId = req.params.id;
+
+        // Recoger datos del body
+        let parametros = req.body;
+
+        //Validar parametros
+        validarArticulo(parametros)
+
+
+        // Buscar y actualizar
+        const articuloActualizado = await Articulo.findByIdAndUpdate(articuloId, parametros, { new: true });
+
+        if (!articuloActualizado) {
+            return res.status(500).json({
+                status: "error",
+                mensaje: "Error al actualizar"
+            });
+        }
+
+        // Devolver una respuesta
+        return res.status(200).json({
+            status: "success",
+            articulo: articuloActualizado
+        });
+    } catch (error) {
+        return res.status(400).json({
+            status: "error",
+            mensaje: "Faltan datos por enviar"
+        });
+    }
+};
+
+
 
 
 
@@ -172,5 +200,6 @@ module.exports = {
     crear,
     listar,
     uno,
-    borrar
+    borrar,
+    editar
 }

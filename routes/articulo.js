@@ -12,6 +12,7 @@ router.post("/crear", ArticuloControlador.crear);
 router.get("/articulos/:ultimos?", ArticuloControlador.listar); //Con el signo de interrogación le indicamos que el parametro es opcional
 router.get("/articulo/:id", ArticuloControlador.uno);
 router.delete("/articulo/:id", ArticuloControlador.borrar);
+router.put("/articulo/:id", ArticuloControlador.editar);
 
 
 
