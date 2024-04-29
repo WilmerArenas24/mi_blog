@@ -101,37 +101,67 @@ const listar = async (req, res) => {
 
 // Método para obtener un solo artículo de mi blog
 const uno = async (req, res) => {
-  try {
-      // Recoger un id de la URL
-      let id = req.params.id;
+    try {
+        // Recoger un id de la URL
+        let id = req.params.id;
 
-      // Buscar un artículo de forma asíncrona
-      const articulo = await Articulo.findById(id);
+        // Buscar un artículo de forma asíncrona
+        const articulo = await Articulo.findById(id);
 
-      // Si no se encuentra el artículo, devolver un error
-      if (!articulo) {
-          return res.status(404).json({
-              status: "error",
-              mensaje: "No se ha encontrado el artículo"
-          });
-      }
+        // Si no se encuentra el artículo, devolver un error
+        if (!articulo) {
+            return res.status(404).json({
+                status: "error",
+                mensaje: "No se ha encontrado el artículo"
+            });
+        }
 
-      // Devolver el resultado
-      return res.status(200).json({
-          status: "success",
-          articulo
-      });
-  } catch (error) {
-      // Manejar errores en caso de que ocurran durante la búsqueda
-      console.error("Error al obtener el artículo:", error);
-      return res.status(500).json({
-          status: "error",
-          mensaje: "Error al obtener el artículo de la base de datos"
-      });
-  }
+        // Devolver el resultado
+        return res.status(200).json({
+            status: "success",
+            articulo
+        });
+    } catch (error) {
+        // Manejar errores en caso de que ocurran durante la búsqueda
+        console.error("Error al obtener el artículo:", error);
+        return res.status(500).json({
+            status: "error",
+            mensaje: "Error al obtener el artículo de la base de datos"
+        });
+    }
 }
 
+//Eliminar un artciulo por id
+const borrar = async (req,res)=>{
 
+  let articulo_id = req.params.id;
+
+  const articulo = await Articulo.findOneAndDelete({_id: articulo_id});
+
+  // Articulo.findOneAndDelete({_id: articulo_id}, (error, articulo_borrado) =>{
+
+    if(!articulo){
+            // Devolver el resultado
+      return res.status(500).json({
+        status: "error",
+        mensaje: "Error al borrar"
+      });
+
+    }
+
+    // Devolver el resultado
+    return res.status(200).json({
+    status: "success",
+    articulo: articulo,
+    mensaje: "Articulo borrando"
+});
+
+  
+  
+
+
+
+}
 
 
 
@@ -141,5 +171,6 @@ module.exports = {
     curso,
     crear,
     listar,
-    uno
+    uno,
+    borrar
 }
