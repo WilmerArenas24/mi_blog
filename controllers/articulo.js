@@ -275,6 +275,39 @@ const imagen = async (req,res) =>{
     })
 } 
 
+const buscador = async (req, res) => {
+    try {
+        // Sacar un string de búsqueda
+        let busqueda = req.params.busqueda;
+
+        // Realizar la búsqueda
+        const articulosEncontrados = await Articulo.find({
+            "$or": [
+                { "titulo": { "$regex": busqueda, "$options": "i" } },
+                { "contenido": { "$regex": busqueda, "$options": "i" } },
+            ]
+        }).sort({ fecha: -1 });
+
+        // Verificar si se encontraron artículos
+        if (!articulosEncontrados || articulosEncontrados.length === 0) {
+            return res.status(404).json({
+                status: "error",
+                mensaje: "Artículos no encontrados"
+            });
+        }
+
+        // Devolver el resultado de la búsqueda
+        return res.status(200).json({
+            status: "success",
+            articulos: articulosEncontrados
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: "error",
+            mensaje: "Error interno del servidor"
+        });
+    }
+};
 
 
 
@@ -288,5 +321,6 @@ module.exports = {
     borrar,
     editar,
     subir,
-    imagen
+    imagen,
+    buscador
 }
